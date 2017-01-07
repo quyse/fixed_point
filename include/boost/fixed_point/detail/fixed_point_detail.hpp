@@ -401,7 +401,7 @@
   #endif // BOOST_FIXED_POINT_DISABLE_MULTIPRECISION
 
   template<typename UnsignedIntegralType>
-  std::uint_fast16_t msb_helper(UnsignedIntegralType& u,
+  inline std::uint_fast16_t msb_helper(UnsignedIntegralType& u,
                                 UnsignedIntegralType& mask,
                                 const std::uint_fast16_t bit_count)
   {
@@ -436,7 +436,7 @@
 
   // Make a template specialization of msb_helper() for std::uint32_t.
   template<>
-  std::uint_fast16_t msb_helper(std::uint32_t& u,
+  inline std::uint_fast16_t msb_helper(std::uint32_t& u,
                                 std::uint32_t&,
                                 const std::uint_fast16_t)
   {
@@ -454,7 +454,7 @@
 
   // Make a template specialization of msb_helper() for std::uint16_t.
   template<>
-  std::uint_fast16_t msb_helper(std::uint16_t& u,
+  inline std::uint_fast16_t msb_helper(std::uint16_t& u,
                                 std::uint16_t&,
                                 const std::uint_fast16_t)
   {
@@ -471,7 +471,7 @@
 
   // Make a template specialization of msb_helper() for std::uint8_t.
   template<>
-  std::uint_fast16_t msb_helper(std::uint8_t& u,
+  inline std::uint_fast16_t msb_helper(std::uint8_t& u,
                                 std::uint8_t&,
                                 const std::uint_fast16_t)
   {

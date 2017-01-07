@@ -244,7 +244,7 @@
   {
     // Forward declaration of the specialization of std::numeric_limits<negatable>.
     template<const int IntegralRange, const int FractionalResolution, typename RoundMode, typename OverflowMode>
-    class numeric_limits<boost::fixed_point::negatable<IntegralRange, FractionalResolution, RoundMode, OverflowMode>>;
+    struct numeric_limits<boost::fixed_point::negatable<IntegralRange, FractionalResolution, RoundMode, OverflowMode>>;
   }
 
   namespace boost { namespace fixed_point {
@@ -1656,7 +1656,7 @@
       }
     };
 
-    friend class std::numeric_limits<negatable>;
+    friend struct std::numeric_limits<negatable>;
 
     friend struct negatable_constants<negatable>;
 
