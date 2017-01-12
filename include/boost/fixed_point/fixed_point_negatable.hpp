@@ -128,6 +128,8 @@
   template<const int IntegralRange, const int FractionalResolution, typename RoundMode, typename OverflowMode>
   struct negatable_constants<negatable<IntegralRange, FractionalResolution, RoundMode, OverflowMode>>;
 
+// not enough deterministic
+#if 0
   // Forward declarations of non-member binary add, sub, mul, div of (negatable op arithmetic_type).
   template<typename ArithmeticType,
            const int IntegralRange, const int FractionalResolution, typename RoundMode, typename OverflowMode>
@@ -139,7 +141,7 @@
 
   template<typename ArithmeticType,
            const int IntegralRange, const int FractionalResolution, typename RoundMode, typename OverflowMode>
-  BOOST_CONSTEXPR typename std::enable_if<std::is_arithmetic<ArithmeticType>::value, negatable<IntegralRange, FractionalResolution, RoundMode, OverflowMode>>::type operator*(const negatable<IntegralRange, FractionalResolution, RoundMode, OverflowMode>& u, const ArithmeticType& v);
+  inline BOOST_CONSTEXPR typename std::enable_if<std::is_arithmetic<ArithmeticType>::value, negatable<IntegralRange, FractionalResolution, RoundMode, OverflowMode>>::type operator*(const negatable<IntegralRange, FractionalResolution, RoundMode, OverflowMode>& u, const ArithmeticType& v);
 
   template<typename ArithmeticType,
            const int IntegralRange, const int FractionalResolution, typename RoundMode, typename OverflowMode>
@@ -161,6 +163,7 @@
   template<typename ArithmeticType,
            const int IntegralRange, const int FractionalResolution, typename RoundMode, typename OverflowMode>
   BOOST_CONSTEXPR typename std::enable_if<std::is_arithmetic<ArithmeticType>::value, negatable<IntegralRange, FractionalResolution, RoundMode, OverflowMode>>::type operator/(const ArithmeticType& u, const negatable<IntegralRange, FractionalResolution, RoundMode, OverflowMode>& v);
+#endif
 
   #if !defined(BOOST_FIXED_POINT_DISABLE_IOSTREAM)
 
@@ -244,7 +247,7 @@
   {
     // Forward declaration of the specialization of std::numeric_limits<negatable>.
     template<const int IntegralRange, const int FractionalResolution, typename RoundMode, typename OverflowMode>
-    struct numeric_limits<boost::fixed_point::negatable<IntegralRange, FractionalResolution, RoundMode, OverflowMode>>;
+    class numeric_limits<boost::fixed_point::negatable<IntegralRange, FractionalResolution, RoundMode, OverflowMode>>;
   }
 
   namespace boost { namespace fixed_point {
@@ -736,7 +739,7 @@
     negatable operator--(int) { const negatable tmp(*this); data -= value_type(unsigned_small_type(1) << radix_split); return tmp; }
 
     //! Unary operator add of (*this += negatable).
-    BOOST_CONSTEXPR negatable& operator+=(const negatable& v)
+    BOOST_CXX14_CONSTEXPR negatable& operator+=(const negatable& v)
     {
       data += v.data;
 
@@ -750,7 +753,7 @@
     }
 
     //! Unary operator subtract of (*this -= negatable).
-    BOOST_CONSTEXPR negatable& operator-=(const negatable& v)
+    BOOST_CXX14_CONSTEXPR negatable& operator-=(const negatable& v)
     {
       data -= v.data;
 
@@ -766,7 +769,7 @@
   #if !defined(BOOST_FIXED_POINT_DISABLE_WIDE_INTEGER_MATH)
 
     //! Unary operator multiply of (*this *= negatable).
-    BOOST_CONSTEXPR negatable& operator*=(const negatable& v)
+    BOOST_CXX14_CONSTEXPR negatable& operator*=(const negatable& v)
     {
       const bool u_is_neg = (  data < 0);
       const bool v_is_neg = (v.data < 0);
@@ -819,7 +822,7 @@
 
   #else
 
-    BOOST_CONSTEXPR negatable& operator*=(const negatable& other)
+    BOOST_CXX14_CONSTEXPR negatable& operator*=(const negatable& other)
     {
       const bool u_is_neg = (      data < value_type(0));
       const bool v_is_neg = (other.data < value_type(0));
@@ -868,7 +871,7 @@
   #endif // BOOST_FIXED_POINT_DISABLE_WIDE_INTEGER_MATH
 
     //! Unary operator divide of (*this /= negatable).
-    BOOST_CONSTEXPR negatable& operator/=(const negatable& v)
+    BOOST_CXX14_CONSTEXPR negatable& operator/=(const negatable& v)
     {
       if(v.data == 0)
       {
@@ -1388,7 +1391,7 @@
        the final result will be.
     */
     template<typename LocalRoundMode = RoundMode>
-    BOOST_STATIC_CONSTEXPR std::int_fast8_t
+    static BOOST_CXX14_CONSTEXPR std::int_fast8_t
       binary_round(unsigned_small_type& u_round,
                    typename std::enable_if<std::is_same<LocalRoundMode, round::nearest_even>::value>::type* = nullptr)
     {
@@ -1662,7 +1665,7 @@
       }
     };
 
-    friend struct std::numeric_limits<negatable>;
+    friend class std::numeric_limits<negatable>;
 
     friend struct negatable_constants<negatable>;
 
@@ -1739,7 +1742,7 @@
 
     //! Implementations of non-member comparison operators of (negatable cmp other_negatable).
     template<const int OtherIntegralRange, const int OtherFractionalResolution>
-    friend inline bool operator==(const negatable& u,
+    BOOST_CONSTEXPR friend inline bool operator==(const negatable& u,
                                   const negatable<OtherIntegralRange, OtherFractionalResolution>& v)
     {
       typedef negatable<(( IntegralRange        >=  OtherIntegralRange)        ? IntegralRange        : OtherIntegralRange),
@@ -1750,7 +1753,7 @@
     }
 
     template<const int OtherIntegralRange, const int OtherFractionalResolution>
-    friend inline bool operator!=(const negatable& u,
+    BOOST_CONSTEXPR friend inline bool operator!=(const negatable& u,
                                   const negatable<OtherIntegralRange, OtherFractionalResolution>& v)
     {
       typedef negatable<(( IntegralRange        >=  OtherIntegralRange)        ? IntegralRange        : OtherIntegralRange),
@@ -1761,7 +1764,7 @@
     }
 
     template<const int OtherIntegralRange, const int OtherFractionalResolution>
-    friend inline bool operator> (const negatable& u,
+    BOOST_CONSTEXPR friend inline bool operator> (const negatable& u,
                                   const negatable<OtherIntegralRange, OtherFractionalResolution>& v)
     {
       typedef negatable<(( IntegralRange        >=  OtherIntegralRange)        ? IntegralRange        : OtherIntegralRange),
@@ -1772,7 +1775,7 @@
     }
 
     template<const int OtherIntegralRange, const int OtherFractionalResolution>
-    friend inline bool operator< (const negatable& u,
+    BOOST_CONSTEXPR friend inline bool operator< (const negatable& u,
                                   const negatable<OtherIntegralRange, OtherFractionalResolution>& v)
     {
       typedef negatable<(( IntegralRange        >=  OtherIntegralRange)        ? IntegralRange        : OtherIntegralRange),
@@ -1783,7 +1786,7 @@
     }
 
     template<const int OtherIntegralRange, const int OtherFractionalResolution>
-    friend inline bool operator>=(const negatable& u,
+    BOOST_CONSTEXPR friend inline bool operator>=(const negatable& u,
                                   const negatable<OtherIntegralRange, OtherFractionalResolution>& v)
     {
       typedef negatable<(( IntegralRange        >=  OtherIntegralRange)        ? IntegralRange        : OtherIntegralRange),
@@ -1794,7 +1797,7 @@
     }
 
     template<const int OtherIntegralRange, const int OtherFractionalResolution>
-    friend inline bool operator<=(const negatable& u,
+    BOOST_CONSTEXPR friend inline bool operator<=(const negatable& u,
                                   const negatable<OtherIntegralRange, OtherFractionalResolution>& v)
     {
       typedef negatable<(( IntegralRange        >=  OtherIntegralRange)        ? IntegralRange        : OtherIntegralRange),
@@ -2009,7 +2012,7 @@
             const int IntegralRange2, const int FractionalResolution2,
             typename RoundMode,
             typename OverflowMode>
-  BOOST_CONSTEXPR negatable<((-FractionalResolution1 >= -FractionalResolution2) ? IntegralRange1        : IntegralRange2),
+  inline BOOST_CXX14_CONSTEXPR negatable<((-FractionalResolution1 >= -FractionalResolution2) ? IntegralRange1        : IntegralRange2),
             ((-FractionalResolution1 >= -FractionalResolution2) ? FractionalResolution1 : FractionalResolution2),
             RoundMode,
             OverflowMode>
@@ -2029,7 +2032,7 @@
             const int IntegralRange2, const int FractionalResolution2,
             typename RoundMode,
             typename OverflowMode>
-  BOOST_CONSTEXPR negatable<((-FractionalResolution1 >= -FractionalResolution2) ? IntegralRange1        : IntegralRange2),
+  inline BOOST_CXX14_CONSTEXPR negatable<((-FractionalResolution1 >= -FractionalResolution2) ? IntegralRange1        : IntegralRange2),
             ((-FractionalResolution1 >= -FractionalResolution2) ? FractionalResolution1 : FractionalResolution2),
             RoundMode,
             OverflowMode>
@@ -2049,7 +2052,7 @@
             const int IntegralRange2, const int FractionalResolution2,
             typename RoundMode,
             typename OverflowMode>
-  BOOST_CONSTEXPR negatable<((-FractionalResolution1 >= -FractionalResolution2) ? IntegralRange1        : IntegralRange2),
+  inline BOOST_CXX14_CONSTEXPR negatable<((-FractionalResolution1 >= -FractionalResolution2) ? IntegralRange1        : IntegralRange2),
             ((-FractionalResolution1 >= -FractionalResolution2) ? FractionalResolution1 : FractionalResolution2),
             RoundMode,
             OverflowMode>
@@ -2069,7 +2072,7 @@
             const int IntegralRange2, const int FractionalResolution2,
             typename RoundMode,
             typename OverflowMode>
-  BOOST_CONSTEXPR negatable<((-FractionalResolution1 >= -FractionalResolution2) ? IntegralRange1        : IntegralRange2),
+  inline BOOST_CXX14_CONSTEXPR negatable<((-FractionalResolution1 >= -FractionalResolution2) ? IntegralRange1        : IntegralRange2),
             ((-FractionalResolution1 >= -FractionalResolution2) ? FractionalResolution1 : FractionalResolution2),
             RoundMode,
             OverflowMode>

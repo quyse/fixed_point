@@ -55,7 +55,7 @@
     {
       const local_unsigned_small_type u_mask(local_unsigned_small_type(-x.crepresentation()) & integral_part_mask);
 
-      return ((local_unsigned_small_type(-x.crepresentation()) == u_mask) ? x : (local_negatable_type(local_nothing(), -local_value_type(u_mask)) - 1));
+      return ((local_unsigned_small_type(-x.crepresentation()) == u_mask) ? x : (local_negatable_type(local_nothing(), -local_value_type(u_mask)) - local_negatable_type(1)));
     }
     else if(x.crepresentation() > 0)
     {
@@ -94,7 +94,7 @@
 
       const local_unsigned_small_type u_mask(u & integral_part_mask);
 
-      return ((u == u_mask) ? x : (local_negatable_type(local_nothing(), local_value_type(u_mask)) + 1));
+      return ((u == u_mask) ? x : (local_negatable_type(local_nothing(), local_value_type(u_mask)) + local_negatable_type(1)));
     }
     else
     {
@@ -213,7 +213,7 @@
   {
     typedef negatable<IntegralRange, FractionalResolution, RoundMode, OverflowMode> local_negatable_type;
 
-    if(y == 0)
+    if(y == local_negatable_type(0U))
     {
       return local_negatable_type(0U);
     }
@@ -228,7 +228,7 @@
 
     local_negatable_type fractional_part = x - (integer_part * y);
 
-    if((x.crepresentation() < 0) != (y < 0))
+    if((x.crepresentation() < 0) != (y < local_negatable_type(0U)))
     {
       fractional_part -= y;
     }
@@ -333,11 +333,11 @@
     typedef typename local_negatable_type::nothing                                  local_nothing;
 
     // Handle arguments negative, zero, or unity.
-    if(x <= 0)
+    if(x <= local_negatable_type(0U))
     {
       return local_negatable_type(0U);
     }
-    else if(x == 1)
+    else if(x == local_negatable_type(1U))
     {
       return local_negatable_type(1U);
     }
@@ -345,7 +345,7 @@
     int n;
 
     // Use range reduction for (x < +1/2) or (x > 1).
-    if((x < ldexp(local_negatable_type(1U), -1)) || (x > 1))
+    if((x < ldexp(local_negatable_type(1U), -1)) || (x > local_negatable_type(1U)))
     {
       x = frexp(x, &n);
     }
@@ -1069,7 +1069,7 @@
     {
       n = int(x / negatable_constants<local_negatable_type>::pi());
 
-      x -= (n * negatable_constants<local_negatable_type>::pi());
+      x -= (local_negatable_type(n) * negatable_constants<local_negatable_type>::pi());
     }
 
     local_negatable_type result;
@@ -1295,7 +1295,7 @@
     {
       n = int(x / negatable_constants<local_negatable_type>::pi());
 
-      x -= (n * negatable_constants<local_negatable_type>::pi());
+      x -= (local_negatable_type(n) * negatable_constants<local_negatable_type>::pi());
     }
 
     local_negatable_type result;
@@ -2046,7 +2046,7 @@
     }
     else if(x > local_negatable_type(1U))
     {
-      result = negatable_constants<local_negatable_type>::pi_half() - atan(1 / x);
+      result = negatable_constants<local_negatable_type>::pi_half() - atan(local_negatable_type(1) / x);
     }
     else
     {
@@ -2145,12 +2145,12 @@
     // Handle the negative arguments and zero arguments.
     const bool x_is_neg = (x.crepresentation() < 0);
 
-    if(y == 0)
+    if(y == local_negatable_type(0U))
     {
       return ((!x_is_neg) ? local_negatable_type(0U) : negatable_constants<local_negatable_type>::pi());
     }
 
-    const bool y_is_neg = (y < 0);
+    const bool y_is_neg = (y < local_negatable_type(0U));
 
     if(x.crepresentation() == 0)
     {
