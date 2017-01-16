@@ -248,7 +248,7 @@
     typedef typename local_negatable_type::nothing                                  local_nothing;
 
     // Handle arguments negative, zero, or unity.
-    if(x <= 0)
+    if(x <= local_negatable_type(0))
     {
       return local_negatable_type(0U);
     }
@@ -260,7 +260,7 @@
     std::int_fast8_t n;
 
     // Use range reduction for (x < +1/2) or (x > 1).
-    if((x < ldexp(local_negatable_type(1U), -1)) || (x > 1))
+    if((x < ldexp(local_negatable_type(1U), -1)) || (x > local_negatable_type(1)))
     {
       int nn;
       x = frexp(x, &nn);
@@ -1009,7 +1009,7 @@
     {
       n = int(x / negatable_constants<local_negatable_type>::pi());
 
-      x -= (n * negatable_constants<local_negatable_type>::pi());
+      x -= (local_negatable_type(n) * negatable_constants<local_negatable_type>::pi());
     }
 
     local_negatable_type result;
@@ -1210,7 +1210,7 @@
     {
       n = int(x / negatable_constants<local_negatable_type>::pi());
 
-      x -= (n * negatable_constants<local_negatable_type>::pi());
+      x -= (local_negatable_type(n) * negatable_constants<local_negatable_type>::pi());
     }
 
     local_negatable_type result;
@@ -1995,7 +1995,7 @@
     }
     else if(x > local_negatable_type(1U))
     {
-      result = negatable_constants<local_negatable_type>::pi_half() - atan(1 / x);
+      result = negatable_constants<local_negatable_type>::pi_half() - atan(local_negatable_type(1) / x);
     }
     else
     {
